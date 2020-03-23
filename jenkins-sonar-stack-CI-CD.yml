@@ -12,7 +12,7 @@ Parameters:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
     Type: AWS::EC2::KeyPair::KeyName
     ConstraintDescription: must be the name of an existing EC2 KeyPair.
-  
+
   InstanceType:
     Description: Docker EC2 instance type
     Type: String
@@ -77,7 +77,7 @@ Resources:
               #!/bin/sh
               yum -y update
               yum -y install epel-release
-            
+
               # install ansible
               yum -y install ansible
 
@@ -90,18 +90,56 @@ Resources:
               sudo usermod -aG docker centos
               cd ../jenkins
               docker-compose up -d
-              
+
               # Desactivate ssh timer
               sudo echo 'ClientAliveInterval 4' >> /etc/ssh/sshd_config
               sudo echo 'ClientAliveCountMax 22' >> /etc/ssh/sshd_config
               sudo systemctl restart sshd
-              
+
               # Clone srource repos
               git clone https://github.com/samiamr/student-list-gitlab-CI_CD.git
-              
+
               git https://github.com/diranetafen/student-list-jenkins-cd.git
-       
-              
+
+
+  CentosInsatanceCDSonarQube:
+    Type: AWS::EC2::Instance
+    Properties:
+      Tags:
+       - Key: Name
+         Value: 'Sonar-CD-Server'
+      InstanceType: !Ref 'InstanceType'
+      SecurityGroups: [!Ref 'InstanceSecurityGroup']
+      KeyName: !Ref 'KeyName'
+      ImageId: 'ami-0083662ba17882949'
+      UserData:
+        'Fn::Base64': !Join
+          - ''
+          - - !Sub |
+              #!/bin/sh
+              yum -y update
+              yum -y install epel-release
+
+              # install ansible
+              yum -y install ansible
+
+              # retrieve ansible code
+              yum -y install git
+              git clone https://github.com/lusianneDjepang/cursus-devops.git
+              cd cursus-devops/ansible
+              ansible-galaxy install -r roles/requirements.yml
+              ansible-playbook install_docker.yml
+              sudo usermod -aG docker centos
+
+              cd ../sonarqube
+              docker-compose up -d
+
+              # Desactivate ssh timer
+              sudo echo 'ClientAliveInterval 4' >> /etc/ssh/sshd_config
+              sudo echo 'ClientAliveCountMax 22' >> /etc/ssh/sshd_config
+              sudo systemctl restart sshd
+
+
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -122,7 +160,7 @@ Resources:
         FromPort: 443
         ToPort: 443
         CidrIp: !Ref 'SSHLocation'
-        
+
   CentosInstanceBuild:
     Type: AWS::EC2::Instance
     Properties:
@@ -137,16 +175,16 @@ Resources:
         'Fn::Base64':
           !Sub |
             #!/bin/bash
-          
+
             # Desactivate ssh timer
             sudo echo 'ClientAliveInterval 4' >> /etc/ssh/sshd_config
             sudo echo 'ClientAliveCountMax 22' >> /etc/ssh/sshd_config
             sudo systemctl restart sshd
-          
+
             # Activate line numer editor vim
             sudo echo 'set nocompatible' > ~/.vimrc
             sudo echo 'set number' >> ~/.vimrc
-  
+
   CentosInstanceProd:
     Type: AWS::EC2::Instance
     Properties:
@@ -165,11 +203,11 @@ Resources:
             sudo echo 'ClientAliveInterval 4' >> /etc/ssh/sshd_config
             sudo echo 'ClientAliveCountMax 22' >> /etc/ssh/sshd_config
             sudo systemctl restart sshd
-          
+
             # Activate line number editor vim
             sudo echo 'set nocompatible' > ~/.vimrc
             sudo echo 'set number' >> ~/.vimrc
-  
+
   InstanceSecurityGroupRemoteServer:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -197,20 +235,24 @@ Outputs:
   InstanceId:
     Description: InstanceId of the newly created EC2 instance
     Value: !Ref 'JenkinsInsatanceCDServer'
+    Value: !Ref 'CentosInsatanceCDSonarQube'
     Value: !Ref 'CentosInstanceBuild'
     Value: !Ref 'CentosInstanceProd'
   AZ:
     Description: Availability Zone of the newly created EC2 instance
     Value: !GetAtt [JenkinsInsatanceCDServer, AvailabilityZone]
+    Value: !GetAtt [CentosInsatanceCDSonarQube, AvailabilityZone]
     Value: !GetAtt [CentosInstanceBuild, AvailabilityZone]
     Value: !GetAtt [CentosInstanceProd, AvailabilityZone]
   PublicDNS:
     Description: Public DNSName of the newly created EC2 instance
     Value: !GetAtt [JenkinsInsatanceCDServer, PublicDnsName]
+    Value: !GetAtt [CentosInsatanceCDSonarQube, PublicDnsName]
     Value: !GetAtt [CentosInstanceBuild, PublicDnsName]
     Value: !GetAtt [CentosInstanceProd, PublicDnsName]
   PublicIP:
     Description: Public IP address of the newly created EC2 instance
     Value: !GetAtt [JenkinsInsatanceCDServer, PublicIp]
+    Value: !GetAtt [CentosInsatanceCDSonarQube, PublicIp]
     Value: !GetAtt [CentosInstanceBuild, PublicIp]
     Value: !GetAtt [CentosInstanceProd, PublicIp]
