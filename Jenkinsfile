@@ -2,8 +2,10 @@ pipeline {
     agent none
     stages {
 	stage('checkout SCM') {
-            checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/lusianneDjepang/student-list-jenkins-Sonar-CI-CD.git']]])
-        }
+		steps {	
+                    checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/lusianneDjepang/student-list-jenkins-Sonar-CI-CD.git']]])
+                }
+	}	
         steps('Code Analysis') {
             def scannerhome = tool 'sonar-scanner';
             withSonarQubeEnv ('SonarQube Server'){
