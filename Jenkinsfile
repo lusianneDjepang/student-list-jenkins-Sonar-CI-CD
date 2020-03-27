@@ -7,10 +7,10 @@ pipeline {
                 }
 	}	
         stage('Code Analysis') {
-		steps{
+		steps {
 	            def scannerhome = tool 'sonar-scanner';
 		}
-		steps{
+		steps {
                     withSonarQubeEnv ('SonarQube Server'){
                     sh ' ${scannerhome}/bin/sonar-runner -D sonar.projectKey=ansible:demo -D sonar.sources=. '
 		}	    
