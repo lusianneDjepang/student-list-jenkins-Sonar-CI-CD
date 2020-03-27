@@ -1,10 +1,10 @@
 pipeline {
     agent none
     stages {
-	stage('checkout SCM') {
+	steps('checkout SCM') {
             checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/lusianneDjepang/student-list-jenkins-Sonar-CI-CD.git']]])
         }
-        stage('Code Analysis') {
+        steps('Code Analysis') {
             def scannerhome = tool 'sonar-scanner';
             withSonarQubeEnv ('SonarQube Server'){
                 sh ''' ${scannerhome}/bin/sonar-runner -D sonar.projectKey=ansible:demo -D sonar.sources=. '''
