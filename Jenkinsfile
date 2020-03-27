@@ -37,8 +37,6 @@ pipeline {
             }
         }
 
-
-##
 	stage('checkout SCM')
 	{
             checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/lusianneDjepang/student-list-jenkins-Sonar-CI-CD.git']]])
@@ -59,7 +57,6 @@ pipeline {
                 '''
             }
         }
-##
         stage('Prepare ansible environment') {
             agent any
             environment {
