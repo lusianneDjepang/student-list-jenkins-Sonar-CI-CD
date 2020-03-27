@@ -7,13 +7,11 @@ pipeline {
                 }
 	}	
         stage('Code Analysis') {
-		steps {
-	            def scannerhome = tool 'sonar-scanner';
-		}
-		steps {
-                    withSonarQubeEnv ('SonarQube Server'){
-                    sh ' ${scannerhome}/bin/sonar-runner -D sonar.projectKey=ansible:demo -D sonar.sources=. '
-		}	    
+	    def scannerhome = tool 'sonar-scanner';
+            withSonarQubeEnv ('SonarQube Server'){
+		    steps {    
+		        sh ' ${scannerhome}/bin/sonar-runner -D sonar.projectKey=ansible:demo -D sonar.sources=. '
+		    }	    
             }
         }
         stage('Check bash syntax') {
