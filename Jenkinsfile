@@ -36,6 +36,30 @@ pipeline {
                 sh 'mdl --style all --warnings --git-recurse \${WORKSPACE}'
             }
         }
+
+
+##
+	stage('checkout SCM')
+	{
+            checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/lusianneDjepang/student-list-jenkins-Sonar-CI-CD.git']]])
+        }
+        stage('Code Analysis')
+        {
+            def scannerhome = tool 'sonar-scanner';
+            withSonarQubeEnv ('SonarQube Server'){
+                sh '''
+                ${scannerhome}/bin/sonar-runner  
+                -D sonar.projectKey=ansible:demo 
+                -D sonar.projectName=ansible:demo 
+                -D sonar.projectVersion=1.0 
+            
+                -D sonar.language=ansible
+                -D sonar.sources=.
+                -D sonar.sourceEncoding=UTF-8
+                '''
+            }
+        }
+##
         stage('Prepare ansible environment') {
             agent any
             environment {
