@@ -1,7 +1,7 @@
 pipeline {
     agent none
     stages {
-	steps('checkout SCM') {
+	stage('checkout SCM') {
             checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/lusianneDjepang/student-list-jenkins-Sonar-CI-CD.git']]])
         }
         steps('Code Analysis') {
