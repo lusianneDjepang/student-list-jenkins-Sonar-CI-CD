@@ -4,7 +4,7 @@ pipeline {
 	/*stage('checkout SCM') {
 		steps {	
                     checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/lusianneDjepang/student-list-jenkins-Sonar-CI-CD.git']]])
-                }
+                }*/
 	}*/	
         /*stage('Code Analysis') {
 	    def scannerhome = tool 'sonar-scanner';
