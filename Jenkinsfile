@@ -1,21 +1,19 @@
 pipeline {
     agent none
     stages {
-	
         stage('Sonarqube') {
-            /*stage('SCM') {
-	        git 'https://github.com/lusianneDjepang/student-list-jenkins-Sonar-CI-CD.git'
-	    }*/
-	    environment {
-		/*git = 'https://github.com/lusianneDjepang/student-list-jenkins-Sonar-CI-CD.git'   */ 
-                scannerHome = tool 'sonar_scanner'
-	    }
-	    steps {
-	        withSonarQubeEnv('sonarqube-server') { // If you have configured more than one global server connection, you can specify its name
-	          sh "${scannerHome}/bin/sonar-scanner"
-	        }
-	    }
-	}
+        agent any
+         environment {
+               scannerHome = tool 'sonar_scanner'
+            }
+         steps {
+            withSonarQubeEnv('sonarqube-server') { // If you have configured more than one global server connection, you can specify its name
+                sh"${scannerHome}/bin/sonar-scanner"
+            }
+        }
+    }
+
+
 
         stage('Check bash syntax') {
             agent { docker { image 'koalaman/shellcheck-alpine:stable' } }
