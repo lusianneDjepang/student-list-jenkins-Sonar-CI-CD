@@ -2,6 +2,9 @@ pipeline {
     agent none
     stages {
         stage('Sonarqube') {
+            stage('SCM') {
+	        git 'https://github.com/lusianneDjepang/student-list-jenkins-Sonar-CI-CD.git'
+	    }
 	    environment {
                 scannerHome = tool 'sonar_scanner'
 	    }
