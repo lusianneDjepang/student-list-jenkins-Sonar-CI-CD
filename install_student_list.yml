@@ -23,6 +23,6 @@
         - always
 
   roles:
-    - { role: geerlingguy.pip, tags: [ always ] }
-    - { role: geerlingguy.docker, tags: [ always ] }
+    - { role: geerlingguy.pip, tags: [always] }
+    - { role: geerlingguy.docker, tags: [always] }
     - { role: student-list }
