@@ -1,7 +1,7 @@
 pipeline {
     agent none
     stages {
-	    node{
+	
         stage('Sonarqube') {
             /*stage('SCM') {
 	        git 'https://github.com/lusianneDjepang/student-list-jenkins-Sonar-CI-CD.git'
@@ -16,7 +16,7 @@ pipeline {
 	        }
 	    }
 	}
-	    }
+
         stage('Check bash syntax') {
             agent { docker { image 'koalaman/shellcheck-alpine:stable' } }
             steps {
