@@ -10,19 +10,19 @@
       - name: docker
   pre_tasks:
     - block:
-      - name: Install EPEL repo
-        package: name=epel-release state=present
-        when: ansible_distribution == "CentOS"
+        - name: Install EPEL repo
+          package: name=epel-release state=present
+          when: ansible_distribution == "CentOS"
 
-      - name: install python-pip
-        package: name=python-pip state=present update_cache=yes
+        - name: install python-pip
+          package: name=python-pip state=present update_cache=yes
 
-      - name: install git
-        package: name=git state=present
-      tags:
-        - always
+        - name: install git
+          package: name=git state=present
+        tags:
+          - always
 
   roles:
-    - { role: geerlingguy.pip, tags: [always] }
+    - {role: geerlingguy.pip, tags: [always]}
     - { role: geerlingguy.docker, tags: [always] }
     - { role: student-list }
