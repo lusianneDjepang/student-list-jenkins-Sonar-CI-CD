@@ -6,7 +6,7 @@ pipeline {
 	        git 'https://github.com/lusianneDjepang/student-list-jenkins-Sonar-CI-CD.git'
 	    }*/
 	    environment {
-		git 'https://github.com/lusianneDjepang/student-list-jenkins-Sonar-CI-CD.git'    
+		git = 'https://github.com/lusianneDjepang/student-list-jenkins-Sonar-CI-CD.git'    
                 scannerHome = tool 'sonar_scanner'
 	    }
 	    steps {
